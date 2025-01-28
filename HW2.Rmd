@@ -70,7 +70,7 @@ ggplot(profs, aes(x = beauty, y = eval)) +
   theme_dark()
 ```
 
-This scatter plot shows the relationship between physical attractiveness (beauty score) and course evaluation scores. The correlation of `r cor(profs$beauty, profs$eval)` indicates a weak, positive relationship between a professor's attractiveness and their evaluation score.
+This scatter plot shows the relationship between physical attractiveness (beauty score) and course evaluation scores. The correlation of `r round(cor(profs$beauty, profs$eval), 2)` indicates a weak, positive relationship between a professor's attractiveness and their evaluation score. 
 
 
 
