@@ -2,15 +2,21 @@
 title: "SDS315 HW 2"
 author: "Zachary Brunell"
 date: "`r Sys.Date()`"
-output: pdf_document
---- 
+output: 
+  pdf_document:
+    toc: true
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
 
+[GitHub Link](https://github.com/zbrunell/SDS315/blob/main/HW2.Rmd)
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.height=8, fig.width= 12, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60), message=FALSE)
 ```
 
 
-#Problem 1: Beauty, or not, in the classroom
+# Problem 1: Beauty, or not, in the classroom
 
 ## Part A
 
@@ -36,6 +42,7 @@ ggplot(profs, aes(x = native, y = eval, fill = native)) +
   scale_fill_manual(values = c('salmon' ,'lightgreen')) +
   theme_minimal()
 ```
+This boxplot compares course evaluation scores for instructors who are native English speakers versus those who are not. It suggests that native English-speaking instructors tend to receive slightly higher scores on average.
 
 
 ## Part C
@@ -49,7 +56,7 @@ ggplot(profs, aes(x = eval)) +
        x = "Course Evaluation Score", y = "Frequency") +
   theme_minimal()
 ```
-
+This faceted histogram shows the distribution of course evaluation scores separated by instructor gender. The graph demonstrates that female teachers have more variation than their male counterparts, but both maintain similar a average score of around 4.0
 
 ## Part D
 
@@ -62,7 +69,7 @@ ggplot(profs, aes(x = beauty, y = eval)) +
   theme_dark()
 ```
 
-
+This scatter plot shows the relationship between physical attractiveness (beauty score) and course evaluation scores. The correlation of `r cor(profs$beauty, profs$eval)` indicates a weak, positive relationship between a professor's attractiveness and their evaluation score.
 
 
 
@@ -93,7 +100,7 @@ ggplot(avg_hourly_rentals, aes(x = hr, y = avg_total)) +
 
 
 ```
-
+The above line plot illustrates the average number of bike rentals by hour of day. The data reveals significant peaks during the morning (7-9 AM) and evening (4-6 PM) commute times, which lower activity in the night. These patterns reflect commuter behaviors.
 
 ## Part B
 
@@ -111,7 +118,7 @@ ggplot(avg_rentals_by_hr, aes(x = hr, y = avg_total)) +
   theme_minimal() +
   scale_x_continuous(breaks = seq(0, 23, by = 1))
 ```
-
+The plot displays bike rentals by hour, separated into working and non-working days. On working days, rental patterns have sharp peaks during morning and evening commutes, while non-working days exhibit a gradual increase as the day progresses to noon, and a gradual decrease afterwards. This suggests that on working days, the bulk of the rentals occur during commute times, while on non-working days, this occurs around (11 AM - 2 PM). The difference highlights the impact of work schedules on bike usage.
 
 ## Part C
 
@@ -136,8 +143,7 @@ ggplot(bike_9am, aes(x = factor(weathersit), y = avg_total, fill = factor(weathe
 
 
 ```
-
-
+This bar plot shows the average number of bike rentals at 9 AM under different weather conditions, split by working and non-working days. Favorable weather (clear or partly cloudy) correlates with higher ridership, especially on non-working days, indicating a preference for outdoor activities in good weather. Additionally, poor weather has less of an effect on rentals when it is a working day, as many will still rely on them to commute. This means rentals for working days is less dependent on weather than that of non-working days.
 
 
 
@@ -196,13 +202,14 @@ ggsave("faceted_line_graph.png", plot = plot, width = 30, height = 20, dpi = 300
 
 plot
 ```
+The faceted line graph demonstrates the average boardings per hour at UT Austin for each day of the week across September, October, and November. Boardings peak in the morning (7-9 AM) and early evening (4-6 PM) on weekdays, aligning with common class schedules and commute times. The trends are far less pronounced on the weekends, with peaks around midday. September shows slightly higher boardings overall compared to the other months, likely due to the start of the semester and the weather.
 
 ## Part B
 
 ```{r message=FALSE, echo=FALSE, warning=FALSE}
 plot <- ggplot(capmetro, aes(x = temperature, y = boarding, color = weekend)) +
   geom_point(alpha = 0.6, size = 2) +  
-  facet_wrap(~hour_of_day, ncol = 4, scales = "fixed") +  # 4 columns
+  facet_wrap(~hour_of_day, ncol = 4, scales = "fixed") + 
   labs(
     title = "Faceted Scatter Plot: Boardings vs. Temperature, Colored by Weekday/Weekend",
     subtitle = "Each facet represents an hour of the day. Points are colored by weekend status.",
@@ -225,6 +232,7 @@ plot <- ggplot(capmetro, aes(x = temperature, y = boarding, color = weekend)) +
 ggsave("faceted_scatter_plot.png", plot = plot, width = 35, height = 28, dpi = 300)
 plot
 ```
+The scatter plot showcases the relationship between temperate (in degrees Fahrenheit) and boardings, faceted by hour of the day. On weekdays, boardings are higher during peak hours (7-9 AM and 4-6 PM) regardless of the temperature. On weekends, boardings are more varied but decrease significantly at extreme temperatures (very hot/cold). Temperatures around 60-80 degrees correspond to the highest boarding numbers.
 
 # Problem 4: Wrangling the Billboard Top 100
 
@@ -244,6 +252,7 @@ top_songs <- billboard %>%
 
 cat("Table: Top 10 Most Popular Songs Since 1958 by Number of Weeks on the Billboard Top 100 Chart.\n")
 ```
+This table lists the top ten most popular sons from 1958 to 2021, ranked by number of weeks on the Billboard Top 100 chart. “Performer” indicates the artist, “Song” is the title of the track, and “Count” represents the total number of weeks the song stayed on the chart.
 
 ## Part B
 
@@ -270,7 +279,7 @@ ggplot(music, aes(x = year, y = unique_songs)) +
     axis.text = element_text(size = 12)
   )
 ```
-  As is evident from the graph, the amount of unique songs decreased drastically from the late 1950s into the 21st century, hitting a minimum around 2001. This decline likely reflects a concentration of mainstream artists and genres during that period due to various factors. However, from the 2000s onwards, there is a clear resurgence in musical diversity. The strong positive slope in this portion of the graph reflects a growing variety of voices in music that have been able to crack into the Billboard Top 100.
+  The line graph illustrates the number of unique songs that appeared on the Billboard Top 100 each year from 1959 to 2020. The x-axis represents the year, and the y-axis represents the count of unique songs. As is evident from the graph, the amount of unique songs decreased drastically from the late 1950s into the 21st century, hitting a minimum around 2001. This decline likely reflects a concentration of mainstream artists and genres during that period due to various factors. However, from the 2000s onwards, there is a clear resurgence in musical diversity. This reflects a time of dominance by a smaller group of artists (fewer one hit wonders). The strong positive slope in this portion of the graph reflects a growing variety of voices in music that have been able to crack into the Billboard Top 100.
   
   
 ```{r message=FALSE, echo=FALSE, warning=FALSE}
@@ -298,4 +307,4 @@ ggplot(ten_week_hits, aes(x = reorder(performer, ten_week_hits_count), y = ten_w
     axis.text = element_text(size = 12)
   )
 ```  
-  
+The bar chart highlights artists with at least 30 songs that spent 10 or more weeks on the Billboard Top 100. The x-axis represents the artists, sorted by the number of ten-week hits (y-axis).
