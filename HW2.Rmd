@@ -1,0 +1,301 @@
+---
+title: "SDS315 HW 2"
+author: "Zachary Brunell"
+date: "`r Sys.Date()`"
+output: pdf_document
+--- 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.height=8, fig.width= 12, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60), message=FALSE)
+```
+
+
+#Problem 1: Beauty, or not, in the classroom
+
+## Part A
+
+```{r echo = FALSE, warning=FALSE}
+
+library(ggplot2)
+profs = read.csv('profs.csv')
+ggplot(profs, aes(x = eval)) +
+  geom_histogram(binwidth = 0.1, bins = 20, fill = "#BF5700", color = "black") +
+  labs(title = "Distribution of Overall Course Evaluation Scores ", x = "Rating", y = "Frequency") +
+  theme_minimal()
+```
+
+This histogram demonstrates the distribution of course evaluation scores. The majority of courses fall between a rating of 3.0 and 4.5, with a noticeable concentration around the 4.0 mark. This is evidenced by the mean, which is `r round(mean(profs$eval), 2)`.The distribution is somewhat right-skewed, indicating that students generally rated courses positively.
+
+
+```{r hide = TRUE, echo = FALSE, warning=FALSE}
+
+ggplot(profs, aes(x = native, y = eval, fill = native)) + 
+  geom_boxplot() +
+  labs(title = "Course Evaluation Scores by Native English Speaker Status",
+       x = "Native English Speaker", y = "Course Evaluation Score") +
+  scale_fill_manual(values = c('salmon' ,'lightgreen')) +
+  theme_minimal()
+```
+
+
+## Part C
+
+```{r hide = TRUE, echo = FALSE, warning=FALSE, message=FALSE, results=FALSE}
+
+ggplot(profs, aes(x = eval)) +
+  geom_histogram(binwidth = 0.1, fill = 'navy', color = 'lightgrey', alpha = 0.7) +
+  facet_wrap(~gender, nrow = 2)
+  labs(title = "Course Evaluation Scores by Gender of Instructor",
+       x = "Course Evaluation Score", y = "Frequency") +
+  theme_minimal()
+```
+
+
+## Part D
+
+```{r hide = TRUE, echo = FALSE, warning=FALSE}
+
+ggplot(profs, aes(x = beauty, y = eval)) +
+  geom_point(alpha = 0.5, color = "white") +
+  labs(title = "Course Evaluation Scores vs. Physical Attractiveness",
+       x = "Physical Attractiveness (Beauty Score)", y = "Course Evaluation Score") +
+  theme_dark()
+```
+
+
+
+
+
+
+
+
+# Problem 2: bike sharing
+
+## Part A
+
+```{r message=FALSE, echo=FALSE, warning=FALSE, results = FALSE}
+library(dplyr)
+
+
+bike <- read.csv("bikeshare.csv")
+avg_hourly_rentals <- bike %>%
+  group_by(hr) %>%                    
+  summarise(avg_total = mean(total))     
+
+# Plot A: Line graph of average hourly bike rentals
+ggplot(avg_hourly_rentals, aes(x = hr, y = avg_total)) +
+  geom_line(color = "dodgerblue", size = 1) +
+  labs(title = "Average Hourly Bike Rentals",
+       x = "Hour of the Day (0–23)",
+       y = "Average Bike Rentals") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(0, 23, by = 1))
+
+
+```
+
+
+## Part B
+
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+avg_rentals_by_hr <- bike %>%
+  group_by(hr, workingday) %>%                
+  summarise(avg_total = mean(total), .groups = 'drop')
+
+ggplot(avg_rentals_by_hr, aes(x = hr, y = avg_total)) +
+  geom_line(color = "#FB7500", size = 1) +
+  labs(title = "Average Hourly Bike Rentals by Working Day",
+       x = "Hour of the Day (0–23)",
+       y = "Average Bike Rentals") +
+  facet_wrap(~workingday, labeller = labeller(workingday = c(`0` = "Non-Working Day", `1` = "Working Day"))) +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(0, 23, by = 1))
+```
+
+
+## Part C
+
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+
+bike_9am = bike %>% 
+  filter(hr == 9) %>%
+  group_by(weathersit, workingday) %>%
+  summarise(avg_total = mean(total), .groups = 'drop')
+ggplot(bike_9am, aes(x = factor(weathersit), y = avg_total, fill = factor(weathersit))) +
+  geom_bar(stat = "identity", color = "black") +
+  labs(title = "Average Ridership at 9 AM by Weather Situation",
+       x = "Weather Situation",
+       y = "Average Bike Rentals",
+       fill = "Weather") +
+  facet_wrap(~workingday, labeller = labeller(workingday = c(`0` = "Non-Working Day", `1` = "Working Day"))) +
+  scale_fill_manual(values = c("purple", "cyan", "skyblue", "darkblue")) + 
+  theme_minimal()
+
+
+
+
+
+```
+
+
+
+
+
+
+
+# Problem 3 - Capital Metro UT Ridership
+
+
+
+## Part A
+
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+
+library(ggplot2)
+library(dplyr)
+
+capmetro <- read.csv("capmetro_UT.csv")
+
+# Ordering day of week and month
+capmetro$day_of_week <- factor(capmetro$day_of_week, 
+                           levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"),
+                           ordered = TRUE)
+capmetro$month <- factor(capmetro$month, 
+                           levels = c("Sep", "Oct", "Nov"),
+                           ordered = TRUE)
+#Creating averages by piping and grouping
+avg_boardings <- capmetro %>%
+  group_by(hour_of_day, day_of_week, month) %>%
+  summarize(avg_boardings = mean(boarding, na.rm = TRUE), .groups = "drop")
+
+
+plot <- ggplot(avg_boardings, aes(x = hour_of_day, y = avg_boardings, color = month)) +
+  geom_line(size = 1) +
+  facet_wrap(~day_of_week, ncol = 4, scales = "fixed") +
+  labs(
+    title = "Faceted Line Graph: Average Boardings by Hour, Day of Week, and Month",
+    subtitle = "Each facet represents a day of the week, and lines show trends for different months.",
+    x = "Hour of the Day",
+    y = "Average Boardings",
+    color = "Month"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 14, hjust = 0.5),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12),
+    strip.text = element_text(size = 14), 
+    legend.position = "bottom"
+  )
+
+
+ggsave("faceted_line_graph.png", plot = plot, width = 30, height = 20, dpi = 300)
+
+plot
+```
+
+## Part B
+
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+plot <- ggplot(capmetro, aes(x = temperature, y = boarding, color = weekend)) +
+  geom_point(alpha = 0.6, size = 2) +  
+  facet_wrap(~hour_of_day, ncol = 4, scales = "fixed") +  # 4 columns
+  labs(
+    title = "Faceted Scatter Plot: Boardings vs. Temperature, Colored by Weekday/Weekend",
+    subtitle = "Each facet represents an hour of the day. Points are colored by weekend status.",
+    x = "Temperature (°F)",
+    y = "Number of Boardings",
+    color = "Weekend"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 14, hjust = 0.5),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12),
+    strip.text = element_text(size = 16), 
+    legend.position = "bottom"
+  )
+
+ggsave("faceted_scatter_plot.png", plot = plot, width = 35, height = 28, dpi = 300)
+plot
+```
+
+# Problem 4: Wrangling the Billboard Top 100
+
+
+## Part A
+```{r results= TRUE, message=FALSE, echo=FALSE, warning=FALSE}
+library(tibble)
+billboard <- read.csv("billboard.csv")
+
+top_songs <- billboard %>%
+  group_by(performer, song) %>%
+  summarize(count = n(), .groups = "drop") %>%  
+  arrange(desc(count)) %>%  
+  slice_head(n = 10) 
+  as_tibble(top_songs)
+
+
+cat("Table: Top 10 Most Popular Songs Since 1958 by Number of Weeks on the Billboard Top 100 Chart.\n")
+```
+
+## Part B
+
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+billboard_filtered = billboard %>%
+  filter(year != 1958, year != 2021)
+
+music = billboard_filtered %>%
+  group_by(year) %>%
+  summarize(unique_songs = n_distinct(song))
+ggplot(music, aes(x = year, y = unique_songs)) + 
+  geom_line()+
+  labs( 
+    title = 'Musical Diversity of the Billboard Top 100 Over Time', 
+    subtitle = 'Number Of Unique Songs Appearing on The List Each Year (1959-2020)',
+    x = "Year",
+    y = 'Number Of Unique Songs'
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12)
+  )
+```
+  As is evident from the graph, the amount of unique songs decreased drastically from the late 1950s into the 21st century, hitting a minimum around 2001. This decline likely reflects a concentration of mainstream artists and genres during that period due to various factors. However, from the 2000s onwards, there is a clear resurgence in musical diversity. The strong positive slope in this portion of the graph reflects a growing variety of voices in music that have been able to crack into the Billboard Top 100.
+  
+  
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+  ten_week_hits = billboard %>% 
+  group_by( performer, song) %>%
+  summarize(weeks_on_chart = n(), .groups = 'drop') %>%
+  filter(weeks_on_chart >= 10) %>%
+  group_by(performer) %>%
+  summarize(ten_week_hits_count = n()) %>%
+  filter(ten_week_hits_count >= 30)
+ggplot(ten_week_hits, aes(x = reorder(performer, ten_week_hits_count), y = ten_week_hits_count)) +
+  geom_bar(stat = "identity", fill = "maroon") +
+  labs(
+    title = "Artists With The Most Ten-Week Hits On T he Billboard Top 100",
+    subtitle = "Number Of Ten-Week Hits For Artists With At Least 30 Ten-Week Hits",
+    x = "Artist",
+    y = "Number of Ten-Week Hits"
+  ) +
+  coord_flip() + 
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12)
+  )
+```  
+  
