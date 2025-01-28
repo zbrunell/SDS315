@@ -1,6 +1,6 @@
 ---
 title: "SDS315 HW 2"
-author: "Zachary Brunell"
+author: "Zachary Brunell (EID - ztb456)"
 date: "`r Sys.Date()`"
 output: 
   pdf_document:
@@ -9,12 +9,12 @@ editor_options:
   markdown: 
     wrap: sentence
 ---
-
-[GitHub Link](https://github.com/zbrunell/SDS315/blob/main/HW2.Rmd)
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.height=8, fig.width= 12, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60), message=FALSE)
 ```
 
+
+# [GitHub Link](https://github.com/zbrunell/SDS315/blob/main/HW2.Rmd)
 
 # Problem 1: Beauty, or not, in the classroom
 
@@ -32,6 +32,7 @@ ggplot(profs, aes(x = eval)) +
 
 This histogram demonstrates the distribution of course evaluation scores. The majority of courses fall between a rating of 3.0 and 4.5, with a noticeable concentration around the 4.0 mark. This is evidenced by the mean, which is `r round(mean(profs$eval), 2)`.The distribution is somewhat right-skewed, indicating that students generally rated courses positively.
 
+## Part B
 
 ```{r hide = TRUE, echo = FALSE, warning=FALSE}
 
