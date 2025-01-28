@@ -235,6 +235,8 @@ plot
 ```
 The scatter plot showcases the relationship between temperate (in degrees Fahrenheit) and boardings, faceted by hour of the day. On weekdays, boardings are higher during peak hours (7-9 AM and 4-6 PM) regardless of the temperature. On weekends, boardings are more varied but decrease significantly at extreme temperatures (very hot/cold). Temperatures around 60-80 degrees correspond to the highest boarding numbers.
 
+\newpage
+
 # Problem 4: Wrangling the Billboard Top 100
 
 
@@ -254,6 +256,8 @@ top_songs <- billboard %>%
 cat("Table: Top 10 Most Popular Songs Since 1958 by Number of Weeks on the Billboard Top 100 Chart.\n")
 ```
 This table lists the top ten most popular sons from 1958 to 2021, ranked by number of weeks on the Billboard Top 100 chart. “Performer” indicates the artist, “Song” is the title of the track, and “Count” represents the total number of weeks the song stayed on the chart.
+
+\newpage
 
 ## Part B
 
