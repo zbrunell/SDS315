@@ -13,8 +13,10 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.height=8, fig.width= 12, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60), message=FALSE)
 ```
+# [GitHub Link](https://github.com/zbrunell/SDS315/blob/HW3/HW3.Rmd)
 
 # Problem 1
+
 ## Part A
 ```{r echo = FALSE, warning=FALSE}
 library(ggplot2)
@@ -57,6 +59,7 @@ Claim: Gas stations at stoplights charge more.
 - Evidence: The bootstrapped mean difference in mean gas prices between stations with and without stoplights is approximately -0.0033, with a confidence interval of 95% of (-0.0378, 0.0307)
 - Conclusion: Since the confidence interval includes 0, we do not have sufficient evidence to conclude that gas stations (in this data set) charge more when they are at stoplights; The data refutes the claim.
 \newpage
+
 ## Part D
 ```{r echo = FALSE, warning=FALSE, results= FALSE}
 boot_highway = do(10000)*diffmean(Price ~ Highway, data = resample(gas))
@@ -70,7 +73,6 @@ Claim: Gas stations with direct highway access charge more.
 \newpage
 
 ## Part E
-
 ```{r echo = FALSE, warning=FALSE}
 gas$ShellGroup = ifelse(gas$Brand == 'Shell', 'Shell', 'Other')
 boot_shell = do(10000) * diffmean(Price ~ ShellGroup, data = resample(gas))
@@ -82,7 +84,9 @@ Claim: Shell charges more than all other non-Shell brands.
 - Evidence: The bootstrapped mean difference in mean gas prices between Shell and non-Shell stations is approximately 0.0274, with a confidence interval of 95% of (-0.0103, 0.0652)
 - Conclusion: Since the confidence interval includes 0, we do not have sufficient evidence to conclude that Shell gas stations (in this data set) charge more than other brands; The data refutes the claim.
 \newpage
+
 # Problem 2
+
 ## Part A
 ```{r echo = FALSE, warning=FALSE}
 amg = read.csv('sclass.csv')
@@ -93,9 +97,8 @@ ggplot(boot_amg) +
   geom_histogram(aes(x= mean), bins=30)
 confint(boot_amg, level = 0.95)
 ```
-
-
 \newpage
+
 ## Part B
 ```{r echo = FALSE, warning=FALSE}
 black_mercedes = read.csv('sclass.csv')
@@ -110,6 +113,7 @@ confint(boot_mercedes$prop_Black, level = 0.95)
 \newpage
 
 # Problem 3
+
 ## Part A
 ```{r echo = FALSE, warning=FALSE}
 nbc  = read.csv('nbc_pilotsurvey.csv')
@@ -125,6 +129,7 @@ confint(boot_nbc, level = 0.95)
 3) Results: The bootstrapped mean difference in  happy responses between My Name is Earl and Living with Ed is approximately -0.0149, with a confidence interval of 95% of (-0.3969, 0.0982)
 4) Conclusion: Since the interval contains 0, there is not statisically significant evidence to support that there is a difference in happiness from the shows.
 \newpage
+
 ## Part B
 ```{r echo = FALSE, warning=FALSE}
 nbc  = read.csv('nbc_pilotsurvey.csv')
@@ -140,6 +145,7 @@ confint(boot_nbc, level = 0.95)
 3) Results: The bootstrapped mean difference in  annoyed responses between My Name is Earl and Living with Ed is approximately -0.271, with a confidence interval of 95% of (-0.5174, -0.0229)
 4) Conclusion: Since the interval does not contain 0, there is statistically significant evidence to support that surveyed viewers found The Apprentice: Los Angeles more annoying than the biggest loser.
 \newpage
+
 ## Part C
 ```{r echo = FALSE, warning=FALSE}
 nbc  = read.csv('nbc_pilotsurvey.csv')
@@ -155,6 +161,7 @@ confint(boot_nbc, level = 0.95)
 3) Results: The bootstrapped mean difference in  happy responses between My Name is Earl and Living with Ed is approximately -0.0149, with a confidence interval of 95% of (-0.3969, 0.0982)
 4) Conclusion: Since the interval contains 0, there is not statistically significant evidence to support that there is a difference in happiness from the shows.
 \newpage
+
 # Problem 4: EBay
 ```{r echo = FALSE, warning=FALSE}
 ebay  = read.csv('ebay.csv')
