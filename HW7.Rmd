@@ -47,7 +47,8 @@ margin_of_error = z_score * SE_diff
 lower_bound <- obs_diff - margin_of_error
 upper_bound <- obs_diff + margin_of_error
 ```
-Formula for Standard Error: $SE(\hat{p}_1 - \hat{p}_2) = \sqrt{\frac{\hat{p}_1(1 - \hat{p}_1)}{N_1} + \frac{\hat{p}_2(1 - \hat{p}_2)}{N_2}}$
+
+Formula for Standard Error: \Large $SE(\hat{p}_1 - \hat{p}_2) = \sqrt{\frac{\hat{p}_1(1 - \hat{p}_1)}{N_1} + \frac{\hat{p}_2(1 - \hat{p}_2)}{N_2}}$ \normalsize
 
 Values plugged into the formula: $P_1$ = `r p1`, $P_2$ = `r p2`, $N_1$ = `r male`, $N_2$ = `r female`
 
