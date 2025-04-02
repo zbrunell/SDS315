@@ -8,7 +8,7 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.height=8, fig.width= 12, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60), message=FALSE)
 ```
-# [GitHub Link](https://github.com/zbrunell/SDS315/compare/main...HW7?expand=1)
+# [GitHub Link](https://github.com/zbrunell/SDS315/blob/main/HW7.Rmd)
 
 # Problem 1
 ```{r Problem 1, echo=FALSE, results = 'asis'}
