@@ -71,6 +71,8 @@ If the interval were [-0.01, 0.30], it would be fair to say that there is no  di
 
 If this experiment were conducted many times with different random samples of university students, it is highly likely that the confidence intervals would differ across samples. This is because each random sample introduces some variability in the sample difference in proportions, and as a result, the values will change with each new sample. In any random sample, there is a degree of randomness, and as such, the sample proportions will vary slightly. This variability is often referred to as Monte Carlo variation. However, we can be confident that approximately 95% of the confidence intervals would contain the true difference in proportions for the population (all men and women). 
 
+# Problem 2
+
 ```{r Problem 2, echo=FALSE, results = 'show', show_col_types = FALSE}
 turnout = read_csv('turnout.csv')
 called = turnout[turnout$GOTV_call == 1, ]
@@ -182,11 +184,12 @@ Since these variables still influence the outcome, they remain relevant predicto
 boot_matched_turtnout = prop.test(voted1998 ~ GOTV_call, data= matched_data)
 confint(boot_matched_turtnout, level = 0.95)
 ```
+
+
 Because the 95% confidence interval does not include 0, this allows us to reject the null hypothesis (that there was no difference in voter turnout between those who received the call and those who did not), **therefore, receiving a GOTV call did have an effect on voter turnout, increasing the likelihood that a person voted.**
 
 
 
-```
 
 
 
