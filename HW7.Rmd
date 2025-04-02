@@ -44,6 +44,7 @@ cat("Sample proportion of females who folded their left arm on top:", paste0(fem
 ```{r Problem 1B, echo=FALSE, results = 'asis'}
 cat("Observed difference in proportions (males minus females):", paste0(obs_diff), "\n\n")
 ```
+
 ## Part C (Using R's Built-In Prop.Test)
 ```{r Problem 1C, echo=FALSE, results = 'show'}
 boot_arms = prop.test(LonR_fold~Sex, data= arms)
@@ -242,9 +243,3 @@ confint(boot_matched_turtnout, level = 0.95)
 
 
 Because the 95% confidence interval does not include 0, this allows us to reject the null hypothesis (that there was no difference in voter turnout between those who received the call and those who did not), **therefore, receiving a GOTV call did have an effect on voter turnout, increasing the likelihood that a person voted.**
-
-
-
-
-
-
