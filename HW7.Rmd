@@ -165,7 +165,7 @@ boot_ages = t.test(AGE ~ GOTV_call, data = turnout)
 confint(boot_ages)
 ggplot(turnout) +
   geom_histogram(aes(x=AGE,y=after_stat(density)),binwidth=2) +
-  facet_wrap(~GOTV_call) + labs(x="Ages",y="Frequency (as proportion)",title="Age Distribution by GOTV call")
+  facet_wrap(~GOTV_call) + labs(x="Ages",y="Frequency (proportion)",title="Age Distribution by GOTV call")
 ```
 Furthermore, the 95% confidence interval for the difference in mean ages between individuals who did not receive a GOTV call and those who did ranges from -11.40 to -6.37. Since this interval does not include zero, the difference is statistically significant, suggesting that age may be a confounding variable in this context. This conclusion is further supported by the visualizations, which clearly illustrate a substantial age gap between the two groups.
 
@@ -247,7 +247,7 @@ The 95% confidence interval for the difference in proportions of individuals reg
 prop(voted1998 ~ GOTV_call, data= matched_data)
 ```
 
-Using the matched dataset, we observe that individuals who received a GOTV call were more likely to vote compared to those who did not. To support this observation with statistical evidence, we will conduct a prop.test, which uses the principles of repeated random sampling to estimate a confidence interval for the difference in proportions and assess statistical significance.
+Using the matched data set, we observe that individuals who received a GOTV call were more likely to vote compared to those who did not. To support this observation with statistical evidence, we will conduct a prop.test, which uses the principles of repeated random sampling to estimate a confidence interval for the difference in proportions and assess statistical significance.
 
 ```{r echo=FALSE, show_col_types = FALSE}
 matched_GOTV = prop.test(voted1998 ~ GOTV_call, data = matched_data)
