@@ -163,9 +163,11 @@ As is evident by the presentation of summary statistics, there is a clear differ
 ```{r echo=FALSE}
 boot_ages = t.test(AGE ~ GOTV_call, data = turnout)
 confint(boot_ages)
+ggplot(turnout) +
+  geom_histogram(aes(x=AGE,y=after_stat(density)),binwidth=2) +
+  facet_wrap(~GOTV_call) + labs(x="Ages",y="Frequency (as proportion)",title="Age Distribution by GOTV call")
 ```
-
-Additionally, our 95% confidence interval for the difference in mean ages between those who did not receive a GOTV_call and those who did is between -11.40 to -6.37 which is statistically significant since it does not include zero, further supporting the idea that age is a confounder in this case.
+Furthermore, the 95% confidence interval for the difference in mean ages between individuals who did not receive a GOTV call and those who did ranges from -11.40 to -6.37. Since this interval does not include zero, the difference is statistically significant, suggesting that age may be a confounding variable in this context. This conclusion is further supported by the visualizations, which clearly illustrate a substantial age gap between the two groups.
 
 \newpage
 
