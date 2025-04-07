@@ -138,7 +138,7 @@ The proportion of individuals who received a GOTV call and voted in 1998 was: **
 
 The proportion of individuals who did not receive a GOTV call and voted in 1998 was: **`r gotv_call_props$'0'`**
 
-```{r echo=FALSE}
+```{r echo=FALSE, show_col_types = FALSE}
 boot_gotv = prop.test(voted1998 ~ GOTV_call, data = turnout)
 confint(boot_gotv)
 ```
@@ -147,7 +147,7 @@ Our 95% confidence interval using prop.test (R's built-in method) for the differ
 
 ## Part B
 
-```{r Problem 2, echo=FALSE, results = 'hide', show_col_types = FALSE}
+```{r Problem 2, echo=FALSE, results = 'show', show_col_types = FALSE}
 turnout = read_csv('turnout.csv')
 voted_summary = turnout %>%
   group_by(GOTV_call) %>%
@@ -160,7 +160,7 @@ As is evident by the presentation of summary statistics, there is a clear differ
 
 ### Age
 
-```{r echo=FALSE}
+```{r echo=FALSE, show_col_types = FALSE}
 boot_ages = t.test(AGE ~ GOTV_call, data = turnout)
 confint(boot_ages)
 ggplot(turnout) +
@@ -172,7 +172,7 @@ Furthermore, the 95% confidence interval for the difference in mean ages between
 \newpage
 
 ### Voted in 1996
-```{r echo=FALSE}
+```{r echo=FALSE, show_col_types = FALSE}
 boot_1996 = prop.test(voted1996 ~ GOTV_call, data = turnout)
 confint(boot_1996)
 ```
@@ -183,7 +183,7 @@ The 95% confidence interval here is [0.122, 0.241]. Since this interval does not
 
 ### Major Party Affiliation
 
-```{r echo=FALSE}
+```{r echo=FALSE, show_col_types = FALSE}
 boot_party = prop.test(MAJORPTY ~ GOTV_call, data = turnout)
 confint(boot_party)
 ```
@@ -200,6 +200,8 @@ turnout_matched = matchit(GOTV_call ~ voted1996 + AGE + MAJORPTY,
                             method = 'optimal',
                            ratio = 5)
 matched_data <- match.data(turnout_matched)
+```
+```{r echo = FALSE, show_col_types = FALSE}
 summary_stats = matched_data %>%
   group_by(GOTV_call) %>%
   summarize('Voted in 1996' = mean(voted1996), Age = mean(AGE),'Major Party' = mean(MAJORPTY))
@@ -207,7 +209,7 @@ summary_stats
 ```
 The above histogram depicts the similarities in our age variable and distribution after matching. This shows almost zero difference between the two due to our matching.
 ### Age (Matched)
-```{r echo=FALSE}
+```{r echo=FALSE, show_col_types = FALSE}
 matched_age = t.test(AGE ~ GOTV_call, data = matched_data)
 confint(matched_age)
 
@@ -225,14 +227,14 @@ When examining our 95% confidence interval, it is clear that the difference in m
 
 ### Voted in 1996 (Matched)
 
-```{r echo=FALSE}
+```{r echo=FALSE, show_col_types = FALSE}
 matched_voted1996 = prop.test(voted1996 ~ GOTV_call, data = matched_data)
 confint(matched_voted1996)
 ```
 The 95% confidence interval for the difference in proportions of those who voted in 1996 and did/did not receive GOTV_call to illustrate this difference ranged from -0.03 to 0.10 meaning it is not statistically significant, further supporting the claim that GOTV_call is not correlated to being registered for a major party in our matched data set.
 ### Major Party (Matched)
 
-```{r echo=FALSE}
+```{r echo=FALSE, show_col_types = FALSE}
 matched_party = prop.test(MAJORPTY ~ GOTV_call, data = matched_data)
 confint(matched_party)
 ```
@@ -243,13 +245,13 @@ The 95% confidence interval for the difference in proportions of those who were 
 
 ## Wrap-Up
 
-```{r echo=FALSE}
+```{r echo=FALSE, show_col_types = FALSE}
 prop(voted1998 ~ GOTV_call, data= matched_data)
 ```
 
 With the matched data set, we can clearly see that those who received the call tended to vote more than those who did not.
 
-```{r echo=FALSE}
+```{r echo=FALSE, show_col_types = FALSE}
 matched_GOTV = prop.test(voted1998 ~ GOTV_call, data = matched_data)
 confint(matched_GOTV)
 ```
