@@ -134,9 +134,9 @@ gotv_call_props <- as.data.frame(t(gotv_call))
 colnames(gotv_call_props) <- c("0", "1")
 ```
 
-The proportion of individuals who received a GOTV call and voted in 1998 was: **`r gotv_call_props$'1'`**
+The proportion of individuals who received a GOTV call and voted in 1998 was: **`r round(gotv_call_props$'1', 4)`**
 
-The proportion of individuals who did not receive a GOTV call and voted in 1998 was: **`r gotv_call_props$'0'`**
+The proportion of individuals who did not receive a GOTV call and voted in 1998 was: **`r round(gotv_call_props$'0', 4)`**
 
 ```{r echo=FALSE, show_col_types = FALSE}
 boot_gotv = prop.test(voted1998 ~ GOTV_call, data = turnout)
