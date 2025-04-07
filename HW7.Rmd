@@ -120,7 +120,7 @@ This is because each random sample introduces some variability in the sample dif
 In any random sample, there is a degree of randomness, and as such, the sample proportions will vary slightly.
 This variability is often referred to as Monte Carlo variation.
 However, we can be confident that approximately 95% of the confidence intervals would contain the true difference in proportions for the population (all men and women).
-
+\newpage
 # Problem 2
 
 ## Part A
