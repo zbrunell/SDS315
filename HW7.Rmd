@@ -143,7 +143,7 @@ boot_gotv = prop.test(voted1998 ~ GOTV_call, data = turnout)
 confint(boot_gotv)
 ```
 
-Our 95% confidence interval using prop.test (R's built-in method) for the difference in proportions of those who voted and did versus did not receive a call is between 0.141 to 0.266. Since this interval does not include 0, it is statistically significant. This means that there is a relationship between receiving a GOTV call and voting in the 1998 election.
+Using R’s built-in prop.test, the 95% confidence interval for the difference in voting proportions between those who received a GOTV call and those who did not is [0.141, 0.266]. Since this interval does not contain zero, the result is statistically significant, suggesting that receiving a GOTV call is associated with higher voter turnout. However, to determine whether this relationship is due to underlying factors, we must examine potential confounders by comparing group means across relevant variables.
 
 ## Part B
 
@@ -156,7 +156,7 @@ voted_summary
 
 ```
 
-As is evident by the presentation of summary statistics, there is a clear difference in proportions for those who received a GOTV call and those who did not. For instance, the mean age of those who received a called was around 58, but those who did not had a mean age of only 49. Since older people have a higher propensity to vote, this is a confounding variable. This observation remains true for the voted in 1996 and major party variables as well. Since these variables affect the treatment and the outcome variable, they are all confounders.
+The summary statistics reveal a clear difference in proportions between individuals who received a GOTV call and those who did not. For example, the mean age of those who received a call was approximately 58, compared to only 49 for those who did not. Given that older individuals are generally more likely to vote, age serves as a confounding variable in this context. This pattern holds for other variables as well, such as whether the individual voted in 1996 and whether they are affiliated with a major party. Since these variables are associated with both the treatment and the outcome, they qualify as confounders.
 
 ### Age
 
@@ -177,7 +177,7 @@ boot_1996 = prop.test(voted1996 ~ GOTV_call, data = turnout)
 confint(boot_1996)
 ```
 
-The 95% confidence interval here is [0.122, 0.241]. Since this interval does not include 0, it supports the conclusion that voting in 1996 is a confounding variable.
+The 95% confidence interval here is [0.122, 0.241]. Since this interval does not include 0, it is statistically significant, meaning it supports the conclusion that voting in 1996 is a confounding variable.
 
 \newpage
 
@@ -207,7 +207,7 @@ summary_stats = matched_data %>%
   summarize('Voted in 1996' = mean(voted1996), Age = mean(AGE),'Major Party' = mean(MAJORPTY))
 summary_stats
 ```
-The above histogram depicts the similarities in our age variable and distribution after matching. This shows almost zero difference between the two due to our matching.
+The above histogram depicts the similarities in our age variable and distribution after matching. This shows almost zero difference between the two due to our matching, which might mean we no longer have tese confounders. To further prove this, we will again look at means across the two groups.
 ### Age (Matched)
 ```{r echo=FALSE, show_col_types = FALSE}
 matched_age = t.test(AGE ~ GOTV_call, data = matched_data)
@@ -222,16 +222,14 @@ When examining our 95% confidence interval, it is clear that the difference in m
 
 \newpage
 
-
-
-
 ### Voted in 1996 (Matched)
 
 ```{r echo=FALSE, show_col_types = FALSE}
 matched_voted1996 = prop.test(voted1996 ~ GOTV_call, data = matched_data)
 confint(matched_voted1996)
 ```
-The 95% confidence interval for the difference in proportions of those who voted in 1996 and did/did not receive GOTV_call to illustrate this difference ranged from -0.03 to 0.10 meaning it is not statistically significant, further supporting the claim that GOTV_call is not correlated to being registered for a major party in our matched data set.
+The 95% confidence interval for the difference in proportions of those who voted in 1996 and did/did not receive GOTV_call to illustrate this difference ranged from -0.03 to 0.10, meaning it is not statistically significant, further supporting the claim that the treatment (GOVT_call) is not associated with being registered for a major party in our matched data set.
+
 ### Major Party (Matched)
 
 ```{r echo=FALSE, show_col_types = FALSE}
@@ -239,7 +237,7 @@ matched_party = prop.test(MAJORPTY ~ GOTV_call, data = matched_data)
 confint(matched_party)
 ```
 
-The 95% confidence interval for the difference in proportions of those who were registered for a major party and did/did not receive GOTV_call to illustrate this difference ranged from -0.05 to 0.07 meaning it is not statistically significant, further supporting the claim that GOTV_call is not correlated to being registered for a major party in our matched data set.
+The 95% confidence interval for the difference in proportions of individuals registered with a major party between those who did and did not receive a GOTV call ranges from -0.05 to 0.07. Since this interval includes zero, the difference is not statistically significant. This supports the conclusion that, in our matched data set, receiving a GOTV call is not associated with major party registration.
 
 \newpage
 
@@ -249,7 +247,7 @@ The 95% confidence interval for the difference in proportions of those who were 
 prop(voted1998 ~ GOTV_call, data= matched_data)
 ```
 
-With the matched data set, we can clearly see that those who received the call tended to vote more than those who did not.
+Using the matched dataset, we observe that individuals who received a GOTV call were more likely to vote compared to those who did not. To support this observation with statistical evidence, we will conduct a prop.test, which uses the principles of repeated random sampling to estimate a confidence interval for the difference in proportions and assess statistical significance.
 
 ```{r echo=FALSE, show_col_types = FALSE}
 matched_GOTV = prop.test(voted1998 ~ GOTV_call, data = matched_data)
