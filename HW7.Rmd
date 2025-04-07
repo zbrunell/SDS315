@@ -35,8 +35,8 @@ female = sum(arms$Sex == 'Female')
 
 male_folded = sum((arms$Sex == 'Male') & (arms$LonR_fold == 1))
 female_folded = sum((arms$Sex == 'Female') & (arms$LonR_fold == 1))
-male_folded_pct = round((male_folded / male), 2)
-female_folded_pct = round((female_folded / female), 2)
+male_folded_pct = round((male_folded / male), 4)
+female_folded_pct = round((female_folded / female), 4)
 obs_diff = male_folded_pct - female_folded_pct
 cat("There are", male, "males and", female, "females.\n\n")
 cat("Sample proportion of males who folded their left arm on top:", paste0(male_folded_pct), "\n\n")
