@@ -1,0 +1,137 @@
+---
+title: "HW8"
+author: "Zachary Brunell"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    toc: true
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[GitHub File Link](https://github.com/brandonduv/SDS315---Brandon-Duvall---HW/blob/main/SDS315HW8.Rmd)
+
+# Problem 1: regression warm up
+```{r, include=FALSE, echo=FALSE}
+library(tidyverse)
+library(mosaic)
+creatinine <- read_csv("creatinine.csv")
+```
+
+#### Part A:
+
+```{r, include=FALSE, echo=FALSE}
+lm_creatinine = lm(creatclear ~ age, data=creatinine)
+coef(lm_creatinine)
+expected_creatinine_55 = 147.81 - 0.62*(55)
+```
+
+The expected creatinine clearance rate for a 55 year old is `r expected_creatinine_55`. This was determined via a linear regression model, which was Expected Creatinine = 147.81 - 0.62 * (Age), where age is the variable which expected creatinine level is dependent on. Plugging in 55, we get EC(55) = 147.81 - 0.62(55), which was our value.
+#### Part B:
+
+As is evident in the linear regression model, as age increases, creatinine rate decreases. Specifically, for every year in a person's age, their creatinine levels fo down by 0.62 ml/minute per year. This was displayed clearly, since it was the coefficient of our age variable in the model.
+
+#### Part C:
+
+```{r, include=FALSE, echo=FALSE}
+expected_creatinine_40 = 147.81 - 0.62*(40)
+expected_creatinine_60 = 147.81 - 0.62*(60)
+actual_40 = 135 - expected_creatinine_40
+actual_60 = 112 - expected_creatinine_60
+```
+```{r, include=FALSE, echo=FALSE, results='hide'}
+actual_40 > actual_60
+```
+
+The 40 year old's creatinine clearance rate is healthier than the 60 year olds. To determine this, I calculated the expected creatinine values for the 40 year old and the 60 year old. Then, we took the actual values of 135 for the 40 year old, and 112 for the 60 year old, and subtracted the expected values from the actual values. This was to determine how much higher or lower they are than we expect, with higher values being healthier, and lower values being less so. Since the 40 year old's value (`r actual_40`) was larger than the 60 year old's (`r actual_60`), the 40 year old has a healthier creatinine clearance rate.
+
+
+\newpage
+
+# Problem 2: Modeling disease growth
+
+```{r, include=FALSE, echo=FALSE}
+covid <- read_csv("covid.csv")
+italy <- covid[covid$country == "Italy", ]
+lm_italy = lm(log(deaths) ~ days_since_first_death, data=italy)
+coef(lm_italy)
+
+boot_lm_italy = do(10000)*{
+  coef(lm(log(deaths) ~ days_since_first_death, data =resample(italy)))
+}
+
+doubling_time = do(10000)*{
+  (70/coef(lm(log(deaths) ~ days_since_first_death, data = resample(italy)))/100)
+}
+
+confint(boot_lm_italy, level = 0.95)
+confint(doubling_time, level = 0.95)
+```
+
+After applying the bootstrap, we estimated the exponential growth rate of COVID-19 deaths in Italy to be approximately 0.1832, with a 95% confidence interval of [0.1595, 0.2071].
+Similarly, bootstrapping was used to estimate the doubling time of COVID-19 deaths in Italy, yielding an estimate of about 3.8 days, with a 95% confidence interval of [3.35, 4.41].
+#### Spain
+
+```{r, include=FALSE, echo=FALSE}
+spain <- covid[covid$country == "Spain", ]
+lm_spain = lm(log(deaths) ~ days_since_first_death, data=spain)
+coef(lm_spain)
+
+boot_lm_spain = do(10000)*{
+  coef(lm(log(deaths) ~ days_since_first_death, data = resample(spain)))
+}
+
+doubling_time_spain = do(10000)*{
+  (70/coef(lm(log(deaths) ~ days_since_first_death, data = resample(spain)))/100)
+}
+
+confint(boot_lm_spain, level = 0.95)
+confint(doubling_time_spain, level = 0.95)
+```
+For Spain, we estimated the exponential growth rate of COVID-19 deaths to be approximately 0.2762, with a 95% confidence interval ranging of [0.2348, 0.3174].
+
+Additionally, the estimated doubling time of COVID-19 deaths in Spain was about 2.5 days, with a 95% confidence interval between [2.22, 2.99] days.
+
+#### Graph Of Deaths Over Time
+
+```{r, include=FALSE, echo=FALSE}
+ggplot(covid) + 
+  geom_line(aes(x = days_since_first_death, y = deaths, color = country), size = 1.2) + 
+  scale_y_log10() +
+  labs(
+    x = "Days Since First Death",
+    y = "Number of Deaths (log scale)",
+    title = "Exponential Growth of COVID-19 Deaths",
+    subtitle = "Deaths plotted by days since the first recorded death in each country",
+    caption = "A line-graph of two of the hardest hit European countries"
+  ) +
+  scale_color_brewer(palette = "Set1") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    plot.subtitle = element_text(size = 12, margin = margin(b = 10)),
+    axis.title = element_text(size = 13),
+    legend.title = element_blank(),
+    legend.position = "bottom"
+  )
+```
+
+\newpage
+
+### Problem 3: price elasticity of demand
+
+```{r,include=FALSE}
+milk = read_csv("milk.csv")
+lm_milk = lm(log(sales) ~ log(price), data=milk)
+coef(lm_milk)
+
+boot_milk = do(10000)*lm(log(sales) ~ log(price), data = resample(milk))
+
+confint(boot_milk, level = 0.95)
+```
+I estimated the price elasticity of demand for milk to be approximately -1.61. Using bootstrapping, I calculated a 95% confidence interval ranging from -1.78 to -1.46. To obtain this estimate, we log-transformed both sales and price and then fit a linear regression model. Bootstrapping was applied to the original dataset to assess the variability of our estimate. An elasticity of -1.62 means that, on average, a 1% increase in milk prices would lead to a 1.62% decrease in quantity demanded.
