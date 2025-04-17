@@ -14,7 +14,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-[GitHub File Link](https://github.com/brandonduv/SDS315---Brandon-Duvall---HW/blob/main/SDS315HW8.Rmd)
+[GitHub File Link](https://github.com/zbrunell/SDS315/edit/main/HW8.Rmd)
 
 # Problem 1: regression warm up
 ```{r, include=FALSE, echo=FALSE}
