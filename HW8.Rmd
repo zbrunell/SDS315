@@ -13,17 +13,18 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+\newpage
+# [GitHub File Link](https://github.com/zbrunell/SDS315/edit/main/HW8.Rmd)
 
-[GitHub File Link](https://github.com/zbrunell/SDS315/edit/main/HW8.Rmd)
 
-# Problem 1: regression warm up
+# Problem 1
 ```{r, include=FALSE, echo=FALSE}
 library(tidyverse)
 library(mosaic)
 creatinine <- read_csv("creatinine.csv")
 ```
 
-#### Part A:
+## Part A
 
 ```{r, include=FALSE, echo=FALSE}
 lm_creatinine = lm(creatclear ~ age, data=creatinine)
@@ -32,11 +33,12 @@ expected_creatinine_55 = 147.81 - 0.62*(55)
 ```
 
 The expected creatinine clearance rate for a 55 year old is `r expected_creatinine_55`. This was determined via a linear regression model, which was Expected Creatinine = 147.81 - 0.62 * (Age), where age is the variable which expected creatinine level is dependent on. Plugging in 55, we get EC(55) = 147.81 - 0.62(55), which was our value.
-#### Part B:
+
+## Part B
 
 As is evident in the linear regression model, as age increases, creatinine rate decreases. Specifically, for every year in a person's age, their creatinine levels fo down by 0.62 ml/minute per year. This was displayed clearly, since it was the coefficient of our age variable in the model.
 
-#### Part C:
+## Part C
 
 ```{r, include=FALSE, echo=FALSE}
 expected_creatinine_40 = 147.81 - 0.62*(40)
@@ -53,7 +55,9 @@ The 40 year old's creatinine clearance rate is healthier than the 60 year olds. 
 
 \newpage
 
-# Problem 2: Modeling disease growth
+# Problem 2
+
+## Italy
 
 ```{r, include=FALSE, echo=FALSE}
 covid <- read_csv("covid.csv")
@@ -75,7 +79,7 @@ confint(doubling_time, level = 0.95)
 
 After applying the bootstrap, we estimated the exponential growth rate of COVID-19 deaths in Italy to be approximately 0.1832, with a 95% confidence interval of [0.1595, 0.2071].
 Similarly, bootstrapping was used to estimate the doubling time of COVID-19 deaths in Italy, yielding an estimate of about 3.8 days, with a 95% confidence interval of [3.35, 4.41].
-#### Spain
+## Spain
 
 ```{r, include=FALSE, echo=FALSE}
 spain <- covid[covid$country == "Spain", ]
@@ -97,7 +101,7 @@ For Spain, we estimated the exponential growth rate of COVID-19 deaths to be app
 
 Additionally, the estimated doubling time of COVID-19 deaths in Spain was about 2.5 days, with a 95% confidence interval between [2.22, 2.99] days.
 
-#### Graph Of Deaths Over Time
+## Graph Of Deaths Over Time
 
 ```{r, include=FALSE, echo=FALSE}
 ggplot(covid) + 
@@ -123,7 +127,7 @@ ggplot(covid) +
 
 \newpage
 
-### Problem 3: price elasticity of demand
+# Problem 3
 
 ```{r,include=FALSE}
 milk = read_csv("milk.csv")
@@ -134,4 +138,4 @@ boot_milk = do(10000)*lm(log(sales) ~ log(price), data = resample(milk))
 
 confint(boot_milk, level = 0.95)
 ```
-I estimated the price elasticity of demand for milk to be approximately -1.61. Using bootstrapping, I calculated a 95% confidence interval ranging from -1.78 to -1.46. To obtain this estimate, we log-transformed both sales and price and then fit a linear regression model. Bootstrapping was applied to the original dataset to assess the variability of our estimate. An elasticity of -1.62 means that, on average, a 1% increase in milk prices would lead to a 1.62% decrease in quantity demanded.
+I estimated the price elasticity of demand for milk to be approximately -1.62. Using bootstrapping, I calculated a 95% confidence interval ranging from -1.78 to -1.46. To obtain this estimate, we log-transformed both sales and price and then fit a linear regression model. Bootstrapping was used assess variability between samples. An elasticity of -1.62 means that, on average, a 1% increase in milk prices would lead to a 1.62% decrease in quantity demanded.
