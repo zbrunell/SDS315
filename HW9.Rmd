@@ -80,17 +80,17 @@ regression_table
 ## Part C
 
 \begin{itemize}
-\item Our intercept estimate of 0.39 estimates the amount of skips when all predictors are at baseline (Large Opening, Thick Solder), and the 95% CI does not include 0, meaning it is statistically significant.
+\item The intercept of 0.39 represents the baseline number of skips for a circuit board using a Large Opening and Thick Solder. This is our reference group, with all other effects measured relative to it.
 
-\item The estimated coefficient of 2.41 for Medium-Sized Opening (OpeningM in isolation) means that the expected skips increases by about 2.41 (Main effect of Medium vs. Large Openings). 
+\item The main effect of Medium Opening (OpeningM) is estimated at 2.41, meaning that using a Medium rather than Large opening increases the expected number of skips by about 2.41, assuming the solder type remains thick.
 
-\item The estimated coefficient of 5.13 for Small-Sized Openings (OpeningS in isolation) means that expected skips increases by about 5.13 (Main effect of Small vs. Large Openings), and the CI does not include 0, meaning it is statistically significant.
+\item The main effect of Small Opening (OpeningS) is estimated at 5.13, meaning that switching from a Large to a Small opening results in approximately 5.13 more skips, holding solder type constant.
 
-\item The estimated coefficient of 2.28 for Thin Solder is the main effect of Thin vs. Thick Solder. The estimated coefficient 2.28 dictates that using a Thin solder increases expected skips by 2.28, and the 95% CI does not include 0, meaning it is statistically significant.
+\item The main effect of Thin Solder (SolderThin) is 2.28, indicating that using a Thin rather than Thick solder increases expected skips by 2.28, assuming the opening size is large.
 
-\item The interaction effect between OpeningM and SolderThin is estimated at -0.74. This means that when both a medium opening and a thin alloy solder are used together, the average number of skips is 0.74 lower than what would be predicted by simply adding the individual effects of using a medium opening and using thin solder separately.
+\item The interaction between OpeningM and SolderThin is -0.74, which suggests that using both a Medium Opening and Thin Solder together results in 0.74 fewer skips than would be expected by simply summing their individual effects
 
-\item The interaction effect between OpeningS and SolderThin is estimated at 9.65 This means that when both a medium opening and a thin alloy solder are used together, the average number of skips is 9.65 higher than what would be predicted by simply adding the individual effects of using a small opening and using thin solder separately.
+\item The interaction between OpeningS and SolderThin is 9.65, indicating that the combination of Small Opening and Thin Solder leads to 9.65 more skips than what would be predicted by adding the individual effects of OpeningS and SolderThin
 
 \end{itemize}
 
@@ -159,7 +159,7 @@ gg_products <- ggplot(grocery_by_product) +
 
 gg_products
 ```
-This ordered bar graph displays the amount of stores in the dataset carrying each of these products. It is important to note that some products, such as eggs and milk, are sold by all 16 stores in the data set, while others, such as Cinnamon Toast are sold only by 4.
+This ordered bar graph displays the number of stores in the dataset that carry each product. Notably, some staple items like eggs and milk are available in all 16 stores, whereas other products, such as Cinnamon Toast, are stocked by only 4 stores. This variation in availability may influence average price comparisons and product accessibility across stores.
 
 
 ## Part C
@@ -186,7 +186,7 @@ regression_table_STORE = get_regression_table(lm_store)
 store_coefs 
 regression_table_STORE
 ```
-Walmart and Kroger Fresh Fare appear to offer the lowest prices for the same products, while Whole Foods and Wheatsville Co-Op cost the most. This is made apparent as the variables with the lowest coefficients bring down the average price, while those with the highest raise it.
+Based on our model, Walmart and Kroger Fresh Fare offer the lowest average prices for the same products, as their store variables have the most negative coefficients, reducing the baseline price the most. In contrast, Whole Foods and Wheatsville Food Co-Op charge the highest prices, as their coefficients are the largest and most positive, increasing the intercept (Price) the most. This suggests that Walmart and Kroger Fresh Fare provide the most affordable options, while Whole Foods and Wheatsville Co-Op are comparatively more expensive for identical products.
 
 ## Part E
 Although Central Market charges slightly more—approximately $0.07—for the same product compared to other stores, this difference is minimal when contrasted with stores like Whole Foods, which charge over a dollar more. This suggests that Central Market likely carries more premium products, contributing to the overall higher cost to consumers. This explanation is further supported by the data, which show that the average store in the dataset is $`r round(mean(store_coefs), 2)` more expensive than H-E-B. Moreover, because the 95% confidence interval for Central Market’s price difference includes zero, the $0.07 increase is not statistically significant.
@@ -206,7 +206,7 @@ standarized = standardize_parameters(lm_income)
 standarized
 
 ```
-The coefficient for Income10k is negative, indicating that, on average, consumers in poorer ZIP codes pay slightly more for the same product, meaning that for every ten thousand dollars a person makes, they can expect to 0.03 cents less.
+The coefficient for Income10k is negative, indicating that, on average, consumers in poorer ZIP codes pay slightly more for the same product, meaning that for every ten thousand dollars a person makes, they can expect to pay 0.03 cents less.
 
 A one-standard deviation increase in the income of a ZIP code seems to be associated with
 a -0.03 standard-deviation change in the price that consumers in that ZIP code expect to pay for
@@ -217,21 +217,21 @@ the same product.
 
 ## Part A
 
-This is true, as the 95% confidence interval for the main effect of minority % on FAIR policies does not include zero, and is a positive number. Additionally, the P value is less than 0.05, giving strong evidence to reject the null hypothesis (that there is zero difference between minorities for FAIR policies).
+This is true, as the 95% confidence interval for the main effect of minority % on FAIR policies does not include zero, and the ceofficient is a positive number. Additionally, the P value is less than 0.05, giving strong evidence to reject the null hypothesis (that there is zero difference between minorities for FAIR policies).
 
 ## Part B
 
-Undecidable, as this data aims to predict the minority percentage of homes using the main effect of age, not the interaction effect of minority percentage and the age and their main effects to predict FAIR policies.
+ There is not enough evidence to determine whether an interaction effect exists between minority percentage and age of housing stock. The model only includes the main effect of minority percentage (with a 95% CI from 0.009 to 0.018) and does not include age of housing or an interaction term. To evaluate this interaction, we would need a model including both main effects and their interaction, and examine whether the confidence interval for the interaction coefficient includes zero. Alternatively, we could visualize a stratified scatter plot of minority percentage versus FAIR policies with slope lines for different age groups of housing. However, without either the figure or the model, we cannot conclude whether an interaction is present.
 
 ## Part C
 
-False, although the intercept and slope for the High Fire Risk group appears higher than that of the Low Fire Risk group, the 95% CI for the interaction effect between Minority % and Fire-Risk includes zero, meaning that the difference in slopes is not actually statistically significant.
+False, although the intercept and slope for the High Fire Risk group appears higher than that of the Low Fire Risk group using the grapy, however, the 95% CI for the interaction effect between Minority % and Fire-Risk includes zero, meaning that the difference in slopes is not actually statistically significant. 
 
 ## Part D
 
-False, the minority coefficient decreased when income was added to the model, but it remains statistically significant (p < 0.05, CI does not include 0), thus, income does decrease the effect, but it does not eliminate it.
+False, the minority coefficient decreased when income was added to the model, but it remains statistically significant (p < 0.05, CI does not include 0), thus, income does decrease the effect, but it does not eliminate it entirely. A more accurate way to assess whether income “explains away” the association between minority percentage and FAIR policy uptake would be to compare effect sizes across models. Specifically, we could create a table showing the change in the coefficient for minority percentage and the change in model R² when income is added as a control variable. This would allow us to evaluate how much of the variation in the number of FAIR policies is accounted for by income, and how much of the original effect attributed to minority percentage remains.
 
 ## Part E
 
 True. In the full model model_E, which includes minority, income, fire, and age, the coefficient for minority remains statistically significant (estimate = 0.008, p = 0.006), with a 95% CI that does not include zero.
-This indicates an association between minority percentage and FAIR policy uptake (about a 0.08 increase on avergae per each percent increased in minority percentage), even after holding the other variables constant.
+This indicates an association between minority percentage and FAIR policy uptake (about a 0.008 increase on avergae per each percent increased in minority percentage), even after holding the other variables constant.
