@@ -84,19 +84,19 @@ regression_table
 
 \item The estimated coefficient of 2.41 for Medium-Sized Opening (OpeningM in isolation) means that the expected skips increases by about 2.41 (Main effect of Medium vs. Large Openings). 
 
-\item The estimated coefficient of 5.13 for Small-Sized Openings (OpeningS in isolation) means that expected skips increases by about 5.13 (Main effect of Small vs. Large Openings), and the 95% CI does not include 0, meaning it is statistically significant.
+\item The estimated coefficient of 5.13 for Small-Sized Openings (OpeningS in isolation) means that expected skips increases by about 5.13 (Main effect of Small vs. Large Openings), and the CI does not include 0, meaning it is statistically significant.
 
 \item The estimated coefficient of 2.28 for Thin Solder is the main effect of Thin vs. Thick Solder. The estimated coefficient 2.28 dictates that using a Thin solder increases expected skips by 2.28, and the 95% CI does not include 0, meaning it is statistically significant.
 
-\item The interaction effect (OpeningM.SolderThin) estimates how the effect of a Medium Opening changes when Thin Alloy Solder is also used. Since the confidence interval includes 0, this suggests that the combined impact of these two variables does not significantly differ from what you would expect by simply adding their individual effects.
+\item The interaction effect between OpeningM and SolderThin is estimated at -0.74. This means that when both a medium opening and a thin alloy solder are used together, the average number of skips is 0.74 lower than what would be predicted by simply adding the individual effects of using a medium opening and using thin solder separately.
 
-\item The interaction effect (OpeningS.SolderThin) estimates the effect of how Small Opening changes with thin Solder. The coefficient of 9.65 means that circuits that have a Small Opening and a Thin Alloy Soldering yield an average of 9.65 more skips times than what you would expect from summing the individual “isolated” effects of the two variables.
+\item The interaction effect between OpeningS and SolderThin is estimated at 9.65 This means that when both a medium opening and a thin alloy solder are used together, the average number of skips is 9.65 higher than what would be predicted by simply adding the individual effects of using a small opening and using thin solder separately.
 
 \end{itemize}
 
 ## Part D
 
-Based on the analysis, I would recommend using a Large Opening with Thick Solder. This combination serves as the reference group in our model, meaning its estimated effect is captured by the intercept alone. The intercept value was approximately 0.39 skips, which is the lowest average skip count observed across all groups.
+Based on the analysis, I recommend using a Large Opening with Thick Solder. This combination serves as the reference group in our model, so its effect is represented solely by the intercept, which was approximately 0.39 skips—the lowest average skip count among all combinations. While the interaction between OpeningM and SolderThin was negative, it wasn’t substantial enough to offset the larger skip counts associated with their individual effects.
 
 
 # Problem 2: Grocery Store Prices
@@ -206,11 +206,11 @@ standarized = standardize_parameters(lm_income)
 standarized
 
 ```
-The coefficient for Income10k is negative, indicating that, on average, consumers in poorer ZIP codes pay slightly more for the same product. However, because the confidence interval includes 0, this effect is not statistically significant, so we cannot confidently conclude that income affects price.
+The coefficient for Income10k is negative, indicating that, on average, consumers in poorer ZIP codes pay slightly more for the same product, meaning that for every ten thousand dollars a person makes, they can expect to 0.03 cents less.
 
 A one-standard deviation increase in the income of a ZIP code seems to be associated with
 a -0.03 standard-deviation change in the price that consumers in that ZIP code expect to pay for
-the same product. Again, this 95% CI includes 0, and cannot be considered as statistically significant.
+the same product.
 \newpage
 
 # Problem 3
