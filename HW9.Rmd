@@ -1,0 +1,237 @@
+---
+title: "HW9"
+author: "Zachary Brunell"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    toc: true
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+\newpage
+
+# [GitHub Link]()
+# Problem 1
+
+## Part A
+
+### Graph For Opening Size
+\vspace*{\fill}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+library(ggplot2)
+library(mosaic)
+library(tidyverse)
+library(moderndive)
+library(dplyr)
+solder = read_csv('solder.csv')
+
+gg_opening = ggplot(solder) + 
+  geom_boxplot(aes(x = Opening, y = skips, fill = Opening)) +
+  labs(
+    x = "Opening Size (S = Small, M = Medium, L = Large)",
+    y = "Number of Skips",
+    title = "Distribution of Skips by Opening Size"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    axis.title = element_text(size = 13),
+    legend.position = "right"
+  )
+
+gg_opening
+```
+The y-axis depicts the number of skips, the x-axis displays the three different opening types (S, M, L). As displayed in the graph, Large Opening Size yields the lowest mean number of skips. The mean number of skips increases as Opening Size decreases.
+\vspace*{\fill}
+\newpage
+
+### Graph For Soldering Thickness
+
+\vspace*{\fill}
+```{r, echo=FALSE, warning=FALSE, fig.align='center'}
+gg_solder = ggplot(solder) + 
+  geom_boxplot(aes(x = Solder, y = skips, fill = Solder)) +
+  labs(
+    x = "Thickness of Alloy Used (Thick Or Thin)",
+    y = "Number of Skips",
+    title = "Distribution of Skips by Thickness of Alloy Used"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    axis.title = element_text(size = 13),
+    legend.position = "right"
+  )
+gg_solder
+
+
+```
+The y-axis is again the number of skips, the x-axis is the thickness of solder used (Thick or Thin). The mean number of skips for the Thick Alloy is lower than that of the Thin option.
+\vspace*{\fill}
+\newpage
+
+## Part B
+
+```{r, include=TRUE, echo=FALSE, message=FALSE}
+lm_solder = lm(skips ~ Opening + Solder + Opening:Solder, data = solder)
+regression_table = get_regression_table(lm_solder)
+regression_table
+```
+
+## Part C
+
+\begin{itemize}
+\item Our intercept estimate of 0.39 estimates the amount of skips when all predictors are at baseline (Large Opening, Thick Solder), and the 95% CI does not include 0, meaning it is statistically significant.
+
+\item The estimated coefficient of 2.41 for Medium-Sized Opening (OpeningM in isolation) means that the expected skips increases by about 2.41 (Main effect of Medium vs. Large Openings). 
+
+\item The estimated coefficient of 5.13 for Small-Sized Openings (OpeningS in isolation) means that expected skips increases by about 5.13 (Main effect of Small vs. Large Openings), and the 95% CI does not include 0, meaning it is statistically significant.
+
+\item The estimated coefficient of 2.28 for Thin Solder is the main effect of Thin vs. Thick Solder. The estimated coefficient 2.28 dictates that using a Thin solder increases expected skips by 2.28, and the 95% CI does not include 0, meaning it is statistically significant.
+
+\item The interaction effect (OpeningM.SolderThin) estimates how the effect of a Medium Opening changes when Thin Alloy Solder is also used. Since the confidence interval includes 0, this suggests that the combined impact of these two variables does not significantly differ from what you would expect by simply adding their individual effects.
+
+\item The interaction effect (OpeningS.SolderThin) estimates the effect of how Small Opening changes with thin Solder. The coefficient of 9.65 means that circuits that have a Small Opening and a Thin Alloy Soldering yield an average of 9.65 more skips times than what you would expect from summing the individual “isolated” effects of the two variables.
+
+\end{itemize}
+
+## Part D
+
+Based on the analysis, I would recommend using a Large Opening with Thick Solder. This combination serves as the reference group in our model, meaning its estimated effect is captured by the intercept alone. The intercept value was approximately 0.39 skips, which is the lowest average skip count observed across all groups.
+
+
+# Problem 2: Grocery Store Prices
+
+## Part A
+
+```{r, echo=FALSE, message=FALSE}
+groceries = read_csv('groceries.csv')
+
+store_avg <- groceries %>%
+  group_by(Store) %>%
+  summarize(avg_price = mean(Price), .groups = 'drop')
+groceries <- groceries %>%
+  left_join(store_avg, by = "Store")
+gg_groceries = ggplot(store_avg) +
+  geom_bar(aes(x = reorder(Store, avg_price), y = avg_price, fill = Store), stat = "identity") +
+  labs(
+    x = "Store",
+    y = "Average Price",
+    title = "Average Price by Store"
+  ) +
+  theme_minimal(base_size = 12) +  
+  theme(
+    axis.text.y = element_text(face = "bold", size = 10), 
+    axis.title = element_text(size = 14),
+    plot.title = element_text(face = "bold", size = 16),
+    legend.position = "none"
+  ) +
+  coord_flip()
+
+gg_groceries
+```
+The graph displays the average price of products sold for several stores in Texas. As is clear, Fiesta and Walmart have some of the lowest average prices, while stores like Whole Foods and Wheatsville Food Co-Op have some of the highest.
+\newpage
+
+## Part B
+
+```{r, fig.height= 10, fig.width=10, echo=FALSE, include= TRUE}
+grocery_by_product = groceries %>%
+  group_by(Product) %>%
+  summarize(num_stores = n())
+
+gg_products <- ggplot(grocery_by_product) +
+  geom_bar(aes(x = num_stores, y = reorder(Product, num_stores)), 
+           stat = "identity", fill = 'steelblue') +
+  labs(
+    x = "Number of Stores Carrying Product",
+    y = "Product",
+    title = "Product Availability Across Stores",
+    caption = "Some products are available in nearly all stores, while others appear in only a few, which affects average price comparisons (Part A)."
+  ) +
+  theme_minimal(base_size = 10) +  
+  theme(
+    axis.text.y = element_text(face = 'bold', size = 10), 
+    axis.title = element_text(size = 12),
+    plot.title = element_text(face = "bold", size = 14),
+    plot.caption = element_text(size = 9, margin = margin(t = 10)),
+    legend.position = "none"
+  )
+
+gg_products
+```
+This ordered bar graph displays the amount of stores in the dataset carrying each of these products. It is important to note that some products, such as eggs and milk, are sold by all 16 stores in the data set, while others, such as Cinnamon Toast are sold only by 4.
+
+
+## Part C
+```{r, include=FALSE, echo=FALSE, message=FALSE}
+groceries$Type <- relevel(as.factor(groceries$Type), ref = "Grocery")
+lm_groceries <- lm(Price ~ Product + Type, data = groceries)
+coef(lm_groceries)
+regression_table_GROCERIES = get_regression_table(lm_groceries)
+regression_table_GROCERIES
+```
+Compared with ordinary grocery stores (like Albertsons, HEB, or Krogers), convenience stores charge somewhere between 0.41 and 0.92 dollars more for the same product.”
+
+## Part D
+
+```{r, include=FALSE, echo=FALSE, message=FALSE}
+groceries$Store <- relevel(as.factor(groceries$Store), ref = "H-E-B")
+lm_store <- lm(Price ~ Product + Store, data = groceries)
+coefs <- coef(lm_store)
+store_coefs <- coefs[grepl("^Store", names(coefs))]
+store_coefs <- c("H-E-B" = 0, store_coefs)
+sorted_store_coefs <- sort(store_coefs)
+store_coefs = round(sorted_store_coefs, 2)
+regression_table_STORE = get_regression_table(lm_store)
+store_coefs 
+regression_table_STORE
+```
+Walmart and Kroger Fresh Fare appear to offer the lowest prices for the same products, while Whole Foods and Wheatsville Co-Op cost the most. This is made apparent as the variables with the lowest coefficients bring down the average price, while those with the highest raise it.
+
+## Part E
+Although Central Market charges slightly more—approximately $0.07—for the same product compared to other stores, this difference is minimal when contrasted with stores like Whole Foods, which charge over a dollar more. This suggests that Central Market likely carries more premium products, contributing to the overall higher cost to consumers. This explanation is further supported by the data, which show that the average store in the dataset is $`r round(mean(store_coefs), 2)` more expensive than H-E-B. Moreover, because the 95% confidence interval for Central Market’s price difference includes zero, the $0.07 increase is not statistically significant.
+
+## Part F
+```{r, include=FALSE, echo=FALSE, message=FALSE}
+library(effectsize)
+groceries = groceries %>%
+  mutate(Income10k = Income/10000)
+lm_income = lm(Price ~ Income10k + Product, data = groceries)
+coef(lm_income)
+confint(lm_income)
+get_regression_table(lm_income)
+sd_income <- sd(groceries$Income10k, na.rm = TRUE)
+sd_price <- sd(groceries$Price, na.rm = TRUE)
+standarized = standardize_parameters(lm_income)
+standarized
+
+```
+The coefficient for Income10k is negative, indicating that, on average, consumers in poorer ZIP codes pay slightly more for the same product. However, because the confidence interval includes 0, this effect is not statistically significant, so we cannot confidently conclude that income affects price.
+
+A one-standard deviation increase in the income of a ZIP code seems to be associated with
+a -0.03 standard-deviation change in the price that consumers in that ZIP code expect to pay for
+the same product. Again, this 95% CI includes 0, and cannot be considered as statistically significant.
+\newpage
+
+# Problem 3
+
+## Part A
+
+This is true, as the 95% confidence interval for the main effect of minority % on FAIR policies does not include zero, and is a positive number. Additionally, the P value is less than 0.05, giving strong evidence to reject the null hypothesis (that there is zero difference between minorities for FAIR policies).
+
+## Part B
+
+Undecidable, as this data aims to predict the minority percentage of homes using the main effect of age, not the interaction effect of minority percentage and the age and their main effects to predict FAIR policies.
+
+## Part C
+
+False, although the intercept and slope for the High Fire Risk group appears higher than that of the Low Fire Risk group, the 95% CI for the interaction effect between Minority % and Fire-Risk includes zero, meaning that the difference in slopes is not actually statistically significant.
+
+## Part D
+
+False, the minority coefficient decreased when income was added to the model, but it remains statistically significant (p < 0.05, CI does not include 0), thus, income does decrease the effect, but it does not eliminate it.
+
+## Part E
+
+True. In the full model model_E, which includes minority, income, fire, and age, the coefficient for minority remains statistically significant (estimate = 0.008, p = 0.006), with a 95% CI that does not include zero.
+This indicates an association between minority percentage and FAIR policy uptake (about a 0.08 increase on avergae per each percent increased in minority percentage), even after holding the other variables constant.
