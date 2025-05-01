@@ -1,5 +1,5 @@
 ---
-title: "SDS315 HW 2"
+title: "SDS315 HW 3"
 author: "Zachary Brunell (EID - ztb456)"
 date: "`r Sys.Date()`"
 output: 
@@ -13,8 +13,10 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.height=8, fig.width= 12, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60), message=FALSE)
 ```
+# [GitHub Link](https://github.com/zbrunell/SDS315/blob/HW3/HW3.Rmd)
 
 # Problem 1
+
 ## Part A
 ```{r echo = FALSE, warning=FALSE}
 library(ggplot2)
@@ -28,10 +30,9 @@ ggplot(boot_gas) +
 confint(boot_gas, level = 0.95)
 
 ```
-Claim: Gas stations charge more if they lack direction competition.
-- Evidence: The bootstrapped mean difference in mean gas prices between stations with and without competition is approximately -0.0235, with a confidence interval of 95% of (-0.0555, 0.0077)
-- Conclusion: Since the confidence interval includes 0, we do not have sufficient evidence to conclude that gas stations (in this data set) charge more when they lack direct competition. The data refutes the claim.
-
+Claim: Gas stations charge more if they lack direction competition. \newline
+ Evidence: The bootstrapped mean difference in gas prices between stations with and without competition is approximately -0.0235, with a confidence interval of 95% of (-0.0555, 0.0077). \newline
+ Conclusion: Since the confidence interval includes 0, we do not have statistically significantly evidence to conclude that gas stations (in this data set) charge more when they lack direct competition: The data refutes the claim. 
 \newpage
 
 ## Part B
@@ -41,9 +42,9 @@ ggplot(boot_income) +
   geom_histogram(aes(x=cor), bins = 30)
 confint(boot_income, level = 0.95)
 ```
-Claim: The richer the area, the higher the gas prices.
-- Evidence: The bootstrapped correlation of mean gas price and income is approximately 0.396, with a confidence interval of 95% of (0.199, 0.566)
-- Conclusion: Since the correlation does not include 0, we can determine there to be a statistically significant, positive, moderate correlation between higher gas price and income; The evidence enforced the claim. 
+Claim: The richer the area, the higher the gas prices. \newline
+- Evidence: The bootstrapped correlation of mean gas price and income is approximately 0.396, with a confidence interval of 95% of (0.199, 0.566) \newline 
+- Conclusion: Since the correlation does not include 0, we can determine there to be a statistically significant, positive, moderate correlation between higher gas price and income; The evidence enforced the claim. \newline
 \newpage
 
 ## Part C
@@ -53,10 +54,11 @@ ggplot(boot_stop) +
   geom_histogram(aes(x=diffmean), bins = 30)
 confint(boot_stop, level = 0.95)
 ```
-Claim: Gas stations at stoplights charge more.
-- Evidence: The bootstrapped mean difference in mean gas prices between stations with and without stoplights is approximately -0.0033, with a confidence interval of 95% of (-0.0378, 0.0307)
-- Conclusion: Since the confidence interval includes 0, we do not have sufficient evidence to conclude that gas stations (in this data set) charge more when they are at stoplights; The data refutes the claim.
+Claim: Gas stations at stoplights charge more. \newline
+Evidence: The bootstrapped mean difference in mean gas prices between stations with and without stoplights is approximately -0.0033, with a confidence interval of 95% of (-0.0378, 0.0307) \newline
+Conclusion: Since the confidence interval includes 0, we do not have sufficient evidence to conclude that gas stations (in this data set) charge more when they are at stoplights; The data refutes the claim. \newline
 \newpage
+
 ## Part D
 ```{r echo = FALSE, warning=FALSE, results= FALSE}
 boot_highway = do(10000)*diffmean(Price ~ Highway, data = resample(gas))
@@ -64,13 +66,12 @@ ggplot(boot_highway) +
   geom_histogram(aes(x=diffmean), bins = 30)
 confint(boot_highway, level = 0.95)
 ```
-Claim: Gas stations with direct highway access charge more.
-- Evidence: The bootstrapped mean difference in mean gas prices between stations with and without direct highway access is approximately 0.0457, with a confidence interval of 95% of (0.0086, 0.0813)
-- Conclusion: Since the confidence interval does not include 0, we do have sufficient evidence to conclude that gas stations (in this data set) charge more when they are at stoplights; The data enforces the claim.
+Claim: Gas stations with direct highway access charge more. \newline
+Evidence: The bootstrapped mean difference in mean gas prices between stations with and without direct highway access is approximately 0.0457, with a confidence interval of 95% of (0.0086, 0.0813) \newline
+Conclusion: Since the confidence interval does not include 0, we do have sufficient evidence to conclude that gas stations (in this data set) charge more when they are at stoplights; The data enforces the claim. \newline
 \newpage
 
 ## Part E
-
 ```{r echo = FALSE, warning=FALSE}
 gas$ShellGroup = ifelse(gas$Brand == 'Shell', 'Shell', 'Other')
 boot_shell = do(10000) * diffmean(Price ~ ShellGroup, data = resample(gas))
@@ -78,11 +79,12 @@ ggplot(boot_shell) +
   geom_histogram(aes(x=diffmean), bins=30)
 confint(boot_shell, level = 0.95)
 ```
-Claim: Shell charges more than all other non-Shell brands.
-- Evidence: The bootstrapped mean difference in mean gas prices between Shell and non-Shell stations is approximately 0.0274, with a confidence interval of 95% of (-0.0103, 0.0652)
-- Conclusion: Since the confidence interval includes 0, we do not have sufficient evidence to conclude that Shell gas stations (in this data set) charge more than other brands; The data refutes the claim.
+Claim: Shell charges more than all other non-Shell brands. \newline
+Conclusion: Since the confidence interval includes 0, we do not have sufficient evidence to conclude that Shell gas stations (in this data set) charge more than other brands; The data refutes the claim. \newline
 \newpage
+
 # Problem 2
+
 ## Part A
 ```{r echo = FALSE, warning=FALSE}
 amg = read.csv('sclass.csv')
@@ -93,9 +95,8 @@ ggplot(boot_amg) +
   geom_histogram(aes(x= mean), bins=30)
 confint(boot_amg, level = 0.95)
 ```
-
-
 \newpage
+
 ## Part B
 ```{r echo = FALSE, warning=FALSE}
 black_mercedes = read.csv('sclass.csv')
@@ -105,11 +106,12 @@ black_mercedes = black_mercedes %>%
 boot_mercedes <- do(10000) * prop(~isBlack, data =  resample(black_mercedes))
 ggplot(boot_mercedes) +
   geom_histogram(aes(x= prop_Black), bins=30)
-confint(boot_mercedes$prop_Black, level = 0.95)
+confint(boot_mercedes, level = 0.95)
 ```
 \newpage
 
 # Problem 3
+
 ## Part A
 ```{r echo = FALSE, warning=FALSE}
 nbc  = read.csv('nbc_pilotsurvey.csv')
@@ -120,11 +122,12 @@ ggplot(boot_nbc) +
     geom_histogram(aes(x= diffmean), bins=30)
 confint(boot_nbc, level = 0.95)
 ```
-1) Question: Does Living With Ed or My Name Is Earl make people happier?
-2) Approach: I used a bootstrapped mean difference of happy responses to answer this question. 
-3) Results: The bootstrapped mean difference in  happy responses between My Name is Earl and Living with Ed is approximately -0.0149, with a confidence interval of 95% of (-0.3969, 0.0982)
-4) Conclusion: Since the interval contains 0, there is not statisically significant evidence to support that there is a difference in happiness from the shows.
+Question: Does Living With Ed or My Name Is Earl make people happier?</br>
+Approach: I used a bootstrapped mean difference of happy responses to answer this question. \newline
+Results: The bootstrapped mean difference in  happy responses between My Name is Earl and Living with Ed is approximately -0.0149, with a confidence interval of 95% of (-0.3969, 0.0982) 
+Conclusion: Since the interval contains 0, there is not statisically significant evidence to support that there is a difference in happiness from the shows.
 \newpage
+
 ## Part B
 ```{r echo = FALSE, warning=FALSE}
 nbc  = read.csv('nbc_pilotsurvey.csv')
@@ -135,11 +138,13 @@ ggplot(boot_nbc) +
     geom_histogram(aes(x= diffmean), bins=30)
 confint(boot_nbc, level = 0.95)
 ```
-1) Question: Does The Biggest Loser or The Apprentice: Los Angeles annoy people more?
-2) Approach: I used a bootstrapped mean difference of annoyed responses to answer this question (filtered the data to contain only these shows prior to this). 
-3) Results: The bootstrapped mean difference in  annoyed responses between My Name is Earl and Living with Ed is approximately -0.271, with a confidence interval of 95% of (-0.5174, -0.0229)
-4) Conclusion: Since the interval does not contain 0, there is statistically significant evidence to support that surveyed viewers found The Apprentice: Los Angeles more annoying than the biggest loser.
+Question: Does The Biggest Loser or The Apprentice: Los Angeles annoy people more? \newline
+Approach: I used a bootstrapped mean difference of annoyed responses to answer this question (filtered the data to contain only these shows prior to this). \newline
+Results: The bootstrapped mean difference in  annoyed responses between The Biggest Loser and The Apprentice: Los Angeles is approximately -0.271, with a confidence interval of 95% of (-0.5174, -0.0229) \newline
+Conclusion: Since the interval does not contain 0, there is statistically significant evidence to support that surveyed viewers found The Apprentice: Los Angeles more annoying than the biggest loser.
+
 \newpage
+
 ## Part C
 ```{r echo = FALSE, warning=FALSE}
 nbc  = read.csv('nbc_pilotsurvey.csv')
@@ -150,10 +155,10 @@ ggplot(boot_nbc) +
     geom_histogram(aes(x = prop_TRUE), bins=30)
 confint(boot_nbc, level = 0.95)
 ```
-1) Question: Does Living With Ed or My Name Is Earl make people happier?
-2) Approach: I used a bootstrapped mean difference of happy responses to answer this question. 
-3) Results: The bootstrapped mean difference in  happy responses between My Name is Earl and Living with Ed is approximately -0.0149, with a confidence interval of 95% of (-0.3969, 0.0982)
-4) Conclusion: Since the interval contains 0, there is not statistically significant evidence to support that there is a difference in happiness from the shows.
+Question: What is the proportion of people confused by Dancing With The Stars \newline
+Approach: I used a bootstrapped proportion of confused responses to answer this question. \newline
+Results: The bootstrapped proportion in  confused responses of Dancing With The Stars is approximately 0.0773, with a confidence interval of 95% of (0.0442, 0.1160) \newline
+Conclusion: We are 95% confident that the true proportion of people confused (4 or more) is between 0.0442 and 0.1160.
 \newpage
 # Problem 4: EBay
 ```{r echo = FALSE, warning=FALSE}
@@ -165,7 +170,7 @@ ggplot(boot_ebay) +
     geom_histogram(aes(x = diffmean), bins=30)
 confint(boot_ebay, level = 0.95)
 ```
-1) Question: Does the extra traffic brought to Ebay from paid search results justify the cost of the ads themselves?
-2) Approach: Found the ratio of revenue after the pause and the revenue before the pause. Then we bootsampled to determine if the ratio before increased or not (if it was in the control or not), and used a confidence interval of 95% to determine the significance. 
-3) Results: The bootstrapped mean difference in  revenue after and before the pause was approximately -0.05228, with a confidence interval of 95% of (-0.0906, -0.01368)
-4) Conclusion: Since this interval does not include 0, there is statistically significant evidence that pausing the advertising led to a lower revenue ratio, meaning this reinforces the claim that the search results' cost are justified.
+Question: Does the extra traffic brought to Ebay from paid search results justify the cost of the ads themselves? \newline
+Approach: Found the ratio of revenue after the pause and the revenue before the pause. Then we bootstrapped to determine if the ratio before increased or not (if it was in the control or not), and used a confidence interval of 95% to determine the significance. \newline
+Results: The bootstrapped mean difference in  revenue after and before the pause was approximately -0.05228, with a confidence interval of 95% of (-0.0906, -0.01368) \newline
+Conclusion: Since this interval does not include 0, there is statistically significant evidence that pausing the advertising led to a lower revenue ratio, meaning this reinforces the claim that the search results' cost are justified. 
