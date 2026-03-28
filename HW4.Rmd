@@ -1,0 +1,203 @@
+---
+title: "SDS315 HW 4"
+author: "Zachary Brunell (EID - ztb456)"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    toc: true
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.height=8, fig.width= 12, warning=FALSE, tidy=TRUE, tidy.opts=list(width.cutoff=60), message=FALSE)
+```
+
+# Question 1
+
+```{r echo = FALSE, warning=FALSE, results = 'hide'}
+library(ggplot2)
+library(mosaic)
+library(dplyr)
+library(tidyverse)
+library(MASS)
+library(stringr)
+n_trade = 2021
+n_flagged = 70
+num_sim = 100000
+expected_prob = 0.024
+
+observed_counts = c(flagged = 70, not_flagged = (n_trade-n_flagged))
+expected_counts = c(flagged = (expected_prob * n_trade), not_flagged = ((1-expected_prob) * n_trade))
+tibble(observed = observed_counts, expected = expected_counts)
+
+chi_squared_statistic = function(observed, expected) {
+  sum((observed - expected)^2 / expected)
+}
+
+chi_sim = do(num_sim) * {
+  simulated_flagged = nflip(n_trade, expected_prob) 
+  simulated_counts = c(flagged = simulated_flagged, not_flagged = n_trade - simulated_flagged)
+  chi_squared_statistic(simulated_counts, expected_counts)
+}
+ggplot(chi_sim) +
+  geom_histogram(aes(x=result), bins = 55, fill = '#BF5700', color = "#F5F5DC") +
+  labs(title = "Histogram of Simulated Chi-Squared Statistics", 
+      x = "Chi-Squared Statistic", 
+      y = "Frequency")
+my_chi2 = chi_squared_statistic(observed_counts, expected_counts)
+my_chi2
+p_value = mean(chi_sim >= my_chi2)
+p_value 
+```
+
+# Question 2
+```{r echo = FALSE, warning=FALSE, results = 'hide'}
+inspections = 50
+n_fail = 8
+p_fail = 0.03
+num_sim = 100000
+
+
+observed_counts = c(failed = n_fail, pass = inspections - n_fail)
+expected_counts = c(failed = .03 * 50, passed = (.97) * 50)
+tibble(observed = observed_counts, expected = expected_counts)
+
+chi_squared_statistic = function(observed, expected) {
+  sum((observed - expected)^2 / expected)
+}
+
+chi_sim = do(num_sim)*{
+  simulated_failures <- rbinom(1, inspections, p_fail)
+  simulated_passes <- inspections - simulated_failures  
+  simulated_counts <- c(failed = simulated_failures, pass = simulated_passes)
+  this_chi1 <- chi_squared_statistic(simulated_counts, expected_counts)
+    c(chi1 = this_chi1)
+}
+ggplot(chi_sim) + 
+  geom_histogram(aes(x=chi1), bins = 55, fill = "#F74902", color = "black") +
+  labs(title = "Histogram of Simulated Chi-Squared Statistics", 
+      x = "Chi-Squared Statistic", 
+      y = "Frequency")
+
+my_chi2 = chi_squared_statistic(observed_counts, expected_counts)
+my_chi2
+p_value = mean(chi_sim >= my_chi2)
+p_value 
+```
+# Question 3
+
+
+```{r echo = FALSE, warning=FALSE, results = 'hide'}
+group_prob= c(GROUP_1 = 0.30, GROUP_2 = 0.25, GROUP_3 = 0.20, GROUP_4 = 0.15, GROUP_5 = 0.10)
+n_jurors = 240
+num_sim = 100000
+observed_counts = c(GROUP_1 = 85 ,GROUP_2 =  56, GROUP_3 = 59, GROUP_4 = 27, GROUP_5 = 13)
+expected_counts = group_prob * n_jurors
+tibble(observed = observed_counts, expected = expected_counts)
+
+chi_squared_statistic = function(observed, expected) {
+  sum((observed - expected)^2 / expected)
+}
+
+chi_sim = do(num_sim)*{
+  simulated_counts = rmultinom(1, n_jurors, group_prob)
+  this_chi1 = chi_squared_statistic(simulated_counts, expected_counts)
+  c(chi1 = this_chi1) # return a vector with names and values
+}
+ggplot(chi_sim) + 
+  geom_histogram(aes(x=chi1), bins = 55, fill = "#4A90E2", color = "black") +
+  labs(title = "Histogram of Simulated Chi-Squared Statistics", 
+      x = "Chi-Squared Statistic", 
+      y = "Frequency")
+my_chi2 = chi_squared_statistic(observed_counts, expected_counts)
+p_value = mean(chi_sim >= my_chi2)
+p_value 
+```
+
+# Question 4
+## Part A
+```{r echo = FALSE, warning=FALSE}
+
+letter_frequencies <- read.csv("letter_frequencies.csv")
+sentences <- readLines("brown_sentences.txt")
+
+
+letter_frequencies$Probability <- letter_frequencies$Probability / sum(letter_frequencies$Probability)
+
+
+process_text <- function(line) {
+  clean_text <- gsub("[^A-Za-z]", "", line) # Remove non-letters
+  clean_text <- toupper(clean_text) # Convert to uppercase
+  letter_counts <- table(factor(str_split(clean_text, "")[[1]], levels = LETTERS)) # Ensure all letters exist
+  return(as.list(letter_counts))
+}
+
+letter_counts_list <- lapply(sentences, process_text)
+
+
+calculate_expected_counts <- function(observed_counts, freq_table) {
+  total_letters <- sum(unlist(observed_counts), na.rm = TRUE)
+  expected_counts <- total_letters * freq_table$Probability 
+
+ 
+  expected_tibble <- tibble(Letter = freq_table$Letter, Expected_Count = expected_counts)
+  return(expected_tibble)
+}
+
+
+calculate_chi_squared <- function(observed_counts, freq_table) {
+  expected_counts <- calculate_expected_counts(observed_counts, freq_table)
+  
+  observed_vector <- unlist(observed_counts)  
+  expected_vector <- expected_counts$Expected_Count  
+
+  # Compute Chi-Squared Statistic
+  chi_squared_stat <- sum((observed_vector - expected_vector)^2 / expected_vector, na.rm = TRUE)
+  return(chi_squared_stat)
+}
+
+# Compute Chi-Squared values for all sentences
+chi_squared_values <- sapply(letter_counts_list, calculate_chi_squared, letter_frequencies)
+
+# Create a histogram of Chi-Squared values
+chi_squared_df <- tibble(Chi_Squared = chi_squared_values)
+chi_squared_df <- tibble(Chi_Squared = chi_squared_values)
+
+ggplot(chi_squared_df, aes(x = Chi_Squared)) +
+  geom_histogram(bins = 50, fill = "#4A90E2", color = "black") +
+  labs(title = "Chi-Squared Statistics for Brown Sentences",
+       x = "Chi-Squared Statistic",
+       y = "Frequency")
+```
+
+## Part B
+```{r echo = FALSE, warning=FALSE}
+test_sentences <- c(
+  "She opened the book and started to read the first chapter, eagerly anticipating what might come next.",
+  "Despite the heavy rain, they decided to go for a long walk in the park, crossing the main avenue by the fountain in the center.",
+  "The museum’s new exhibit features ancient artifacts from various civilizations around the world.",
+  "He carefully examined the document, looking for any clues that might help solve the mystery.",
+  "The students gathered in the auditorium to listen to the guest speaker’s inspiring lecture.",
+  "Feeling vexed after an arduous and zany day at work, she hoped for a peaceful and quiet evening at home, cozying up after a quick dinner with some TV, or maybe a book on her upcoming visit to Auckland.",
+  "The chef demonstrated how to prepare a delicious meal using only locally sourced ingredients, focusing mainly on some excellent dinner recipes from Spain.",
+  "They watched the sunset from the hilltop, marveling at the beautiful array of colors in the sky.",
+  "The committee reviewed the proposal and provided many points of useful feedback to improve the project’s effectiveness.",
+  "Despite the challenges faced during the project, the team worked tirelessly to ensure its successful completion, resulting in a product that exceeded everyone’s expectations."
+)
+test_chi_squared_values <- sapply(test_sentences, function(sentence) {
+  observed_counts <- process_text(sentence)  # Get observed letter counts
+  calculate_chi_squared(observed_counts, letter_frequencies)  # Calculate chi-squared value
+})
+
+# Calculate p-values by comparing with the Brown Corpus chi-squared values
+p_values <- sapply(test_chi_squared_values, function(x) mean(chi_squared_values >= x))
+
+# Create a tibble with the results
+test_results <- tibble(Sentence = 1:10, 
+                       Chi_Squared_Value = test_chi_squared_values, 
+                       P_Value = round(p_values, 3))
+# Print the results
+print(test_results)
+```
